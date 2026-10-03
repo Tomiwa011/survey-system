@@ -1,11 +1,20 @@
 require('dotenv').config();
 const pool = require('./db');
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const adminRoutes = require('./routes/admin');
+
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
+
+
+
+
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
