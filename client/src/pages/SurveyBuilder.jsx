@@ -25,6 +25,10 @@ const [qRequired, setQRequired] = useState(false);
 const [qOptions, setQOptions] = useState(['', '']);
 const [adding, setAdding] = useState(false);
 const [addError, setAddError] = useState('');
+const [editingId, setEditingId] = useState(null);
+const [editText, setEditText] = useState('');
+const [editRequired, setEditRequired] = useState(false);
+const [actionError, setActionError] = useState('');
 
 const isChoice = qType === 'single_choice' || qType === 'multiple_choice';
 
@@ -77,6 +81,49 @@ async function handleAddQuestion(e) {
     setAdding(false);
   }
 }
+function startEdit(q) {
+  setActionError('');
+  setEditingId(q.id);
+  setEditText(q.text);
+  setEditRequired(q.required);
+}
+
+async function saveEdit(q) {
+  setActionError('');
+  try {
+    const data = await api(`/api/surveys/${id}/questions/${q.id}`, {
+      method: 'PATCH',
+      body: { text: editText, required: editRequired },
+    });
+    setQuestions(
+      questions.map((x) =>
+        x.id === q.id
+          ? { ...x, text: data.question.text, required: data.question.required }
+          : x
+      )
+    );
+    setEditingId(null);
+  } catch (err) {
+    if (err.status === 401) navigate('/login');
+    else setActionError(err.message);
+  }
+}
+
+async function handleDeleteQuestion(q) {
+  if (!window.confirm(`Delete question "${q.text}"?`)) return;
+  setActionError('');
+  try {
+    await api(`/api/surveys/${id}/questions/${q.id}`, { method: 'DELETE' });
+    setQuestions(
+      questions
+        .filter((x) => x.id !== q.id)
+        .map((x) => (x.position > q.position ? { ...x, position: x.position - 1 } : x))
+    );
+  } catch (err) {
+    if (err.status === 401) navigate('/login');
+    else setActionError(err.message);
+  }
+}
   if (authLoading) return <p>Loading...</p>;
   if (!user) return <Navigate to="/login" replace />;
 
@@ -105,26 +152,83 @@ async function handleAddQuestion(e) {
               <p className="text-gray-500">No questions yet.</p>
             )}
 
-            {questions.map((q) => (
-              <div key={q.id} className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="font-medium text-gray-900">
-                    {q.position}. {q.text}
-                    {q.required && <span className="text-red-600"> *</span>}
-                  </p>
-                  <span className="shrink-0 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-700">
-                    {TYPE_LABEL[q.type]}
-                  </span>
-                </div>
-                {q.options.length > 0 && (
-                  <ul className="mt-2 list-disc pl-6 text-gray-600">
-                    {q.options.map((o) => (
-                      <li key={o.id}>{o.label}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+          {actionError && (
+  <p role="alert" className="mb-3 rounded bg-red-50 px-3 py-2 text-red-700">
+    {actionError}
+  </p>
+)}
+
+{questions.map((q) => (
+  <div key={q.id} className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    {editingId === q.id ? (
+      <div className="space-y-3">
+        <input
+          type="text"
+          value={editText}
+          onChange={(e) => setEditText(e.target.value)}
+          maxLength={500}
+          aria-label="Question text"
+          className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <label className="flex items-center gap-2 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={editRequired}
+            onChange={(e) => setEditRequired(e.target.checked)}
+          />
+          Required
+        </label>
+        <div className="flex gap-2">
+          <button
+            onClick={() => saveEdit(q)}
+            className="rounded bg-blue-600 px-3 py-1 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            Save
+          </button>
+          <button
+            onClick={() => setEditingId(null)}
+            className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ) : (
+      <>
+        <div className="flex items-start justify-between gap-2">
+          <p className="font-medium text-gray-900">
+            {q.position}. {q.text}
+            {q.required && <span className="text-red-600"> *</span>}
+          </p>
+          <span className="shrink-0 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-700">
+            {TYPE_LABEL[q.type]}
+          </span>
+        </div>
+        {q.options.length > 0 && (
+          <ul className="mt-2 list-disc pl-6 text-gray-600">
+            {q.options.map((o) => (
+              <li key={o.id}>{o.label}</li>
             ))}
+          </ul>
+        )}
+        <div className="mt-3 flex gap-2">
+          <button
+            onClick={() => startEdit(q)}
+            className="rounded border border-blue-600 px-3 py-1 text-sm font-medium text-blue-700 hover:bg-blue-50"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDeleteQuestion(q)}
+            className="rounded border border-red-600 px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-50"
+          >
+            Delete
+          </button>
+        </div>
+      </>
+    )}
+  </div>
+))}
             <form
   onSubmit={handleAddQuestion}
   className="mt-6 space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"

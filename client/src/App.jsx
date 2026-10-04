@@ -3,6 +3,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import SurveyBuilder from './pages/SurveyBuilder';
+import PublicSurvey from './pages/PublicSurvey';
+import Results from './pages/Results';
+import Admin from './pages/Admin';
 
 export default function App() {
   return (
@@ -12,6 +15,9 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/surveys/:id" element={<SurveyBuilder />} />
+      <Route path="/s/:id" element={<PublicSurvey />} />
+      <Route path="/surveys/:id/results" element={<Results />} />
+      <Route path="/admin" element={<Admin />} />
     </Routes>
   );
 }

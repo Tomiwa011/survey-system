@@ -111,5 +111,83 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Something went wrong' });
   }
 });
+router.patch('/:questionId', async (req, res) => {
+  if (!UUID_RE.test(req.params.questionId)) {
+    return res.status(404).json({ error: 'Question not found' });
+  }
 
+  const { text, required } = req.body;
+
+  if (text === undefined && required === undefined) {
+    return res.status(400).json({ error: 'Nothing to update' });
+  }
+
+  let cleanText = null;
+  if (text !== undefined) {
+    if (typeof text !== 'string' || text.trim().length < 1 || text.trim().length > 500) {
+      return res.status(400).json({ error: 'Question text must be 1 to 500 characters' });
+    }
+    cleanText = text.trim();
+  }
+
+  let cleanRequired = null;
+  if (required !== undefined) {
+    if (typeof required !== 'boolean') {
+      return res.status(400).json({ error: 'Required must be true or false' });
+    }
+    cleanRequired = required;
+  }
+
+  try {
+    const result = await pool.query(
+      `UPDATE questions
+       SET text = COALESCE($1, text),
+           required = COALESCE($2, required)
+       WHERE id = $3 AND survey_id = $4
+       RETURNING id, type, text, required, position`,
+      [cleanText, cleanRequired, req.params.questionId, req.params.surveyId]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Question not found' });
+    }
+    res.json({ question: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+router.delete('/:questionId', async (req, res) => {
+  if (!UUID_RE.test(req.params.questionId)) {
+    return res.status(404).json({ error: 'Question not found' });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const deleted = await client.query(
+      'DELETE FROM questions WHERE id = $1 AND survey_id = $2 RETURNING position',
+      [req.params.questionId, req.params.surveyId]
+    );
+    if (deleted.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ error: 'Question not found' });
+    }
+
+    await client.query(
+      'UPDATE questions SET position = position - 1 WHERE survey_id = $1 AND position > $2',
+      [req.params.surveyId, deleted.rows[0].position]
+    );
+
+    await client.query('COMMIT');
+    res.status(204).end();
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong' });
+  } finally {
+    client.release();
+  }
+});
 module.exports = router;

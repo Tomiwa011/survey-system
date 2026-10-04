@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const surveyRoutes = require('./routes/surveys');
 const questionRoutes = require('./routes/questions');
+const publicRoutes = require('./routes/public');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/surveys', surveyRoutes);
 app.use('/api/surveys/:surveyId/questions', questionRoutes);
+app.use('/api/public', publicRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });

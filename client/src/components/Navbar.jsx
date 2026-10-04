@@ -11,6 +11,11 @@ export default function Navbar() {
       </Link>
       {user && (
         <div className="flex items-center gap-3">
+            {user.role === 'admin' && (
+  <Link to="/admin" className="text-sm text-gray-300 hover:text-white">
+    Admin
+  </Link>
+)}
           <span className="text-sm text-gray-300">{user.name}</span>
           <button
             onClick={logout}
