@@ -28,7 +28,7 @@ export default function Login() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex w-full max-w-5xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_25px_80px_rgba(15,23,42,0.12)]">
-        <aside className="hidden w-1/2 bg-gradient-to-br from-blue-700 via-indigo-600 to-cyan-500 p-8 text-white lg:flex lg:flex-col lg:justify-between">
+        <aside className="hidden w-1/2 bg-blue-600 p-8 text-white lg:flex lg:flex-col lg:justify-between">
           <div>
             <div className="mb-8 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-lg font-bold shadow-inner ring-1 ring-white/20">

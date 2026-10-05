@@ -3,10 +3,38 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pool = require('../db');
+const rateLimit = require('express-rate-limit');
 
 const router = express.Router();
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts, please try again in 15 minutes' },
+});
 
-router.post('/register', async (req, res) => {
+const passwordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many attempts, please try again in 15 minutes' },
+});
+
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many accounts created from this connection, please try again later' },
+});
+
+
+
+router.post('/register', registerLimiter, async (req, res) => {
   const { name, email, password } = req.body;
 
 
@@ -51,7 +79,7 @@ const COOKIE_OPTIONS = {
   maxAge: 60 * 60 * 1000,
 };
 
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
   const { email, password } = req.body;
 
   if (typeof email !== 'string' || typeof password !== 'string') {
@@ -86,5 +114,82 @@ router.post('/logout', (req, res) => {
 });
 router.get('/me', requireAuth, (req, res) => {
   res.json({ user: req.user });
+});
+
+router.patch('/me', requireAuth, async (req, res) => {
+  const { name, email } = req.body;
+
+  if (name === undefined && email === undefined) {
+    return res.status(400).json({ error: 'Nothing to update' });
+  }
+
+  let cleanName = null;
+  if (name !== undefined) {
+    if (typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 100) {
+      return res.status(400).json({ error: 'Name must be 2 to 100 characters' });
+    }
+    cleanName = name.trim();
+  }
+
+  let cleanEmail = null;
+  if (email !== undefined) {
+    if (typeof email !== 'string') {
+      return res.status(400).json({ error: 'Enter a valid email address' });
+    }
+    cleanEmail = email.trim().toLowerCase();
+    if (cleanEmail.length > 255 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      return res.status(400).json({ error: 'Enter a valid email address' });
+    }
+  }
+
+  try {
+    const result = await pool.query(
+      `UPDATE users
+       SET name = COALESCE($1, name),
+           email = COALESCE($2, email)
+       WHERE id = $3
+       RETURNING id, name, email, role`,
+      [cleanName, cleanEmail, req.user.id]
+    );
+    res.json({ user: result.rows[0] });
+  } catch (err) {
+    if (err.code === '23505') {
+      return res.status(409).json({ error: 'That email is already registered' });
+    }
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+router.post('/change-password', requireAuth, passwordLimiter, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (typeof currentPassword !== 'string' || typeof newPassword !== 'string') {
+    return res.status(400).json({ error: 'Current and new password are required' });
+  }
+  if (currentPassword.length > 1000) {
+    return res.status(400).json({ error: 'Current password is incorrect' });
+  }
+  if (newPassword.length < 8 || newPassword.length > 72) {
+    return res.status(400).json({ error: 'New password must be 8 to 72 characters' });
+  }
+  if (newPassword === currentPassword) {
+    return res.status(400).json({ error: 'New password must be different from the current one' });
+  }
+
+  try {
+    const result = await pool.query('SELECT password_hash FROM users WHERE id = $1', [req.user.id]);
+    const match = await bcrypt.compare(currentPassword, result.rows[0].password_hash);
+    if (!match) {
+      return res.status(400).json({ error: 'Current password is incorrect' });
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 12);
+    await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newHash, req.user.id]);
+    res.json({ message: 'Password changed' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
 });
 module.exports = router;
