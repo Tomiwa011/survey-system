@@ -44,7 +44,7 @@ const MEASURES = [
   },
   {
     title: 'Rate limiting',
-    text: 'Login, registration, password changes and public survey submissions are limited per address, which slows down password guessing and spam.',
+    text: 'Rate-limit counters are kept in the server\'s memory, so they reset when the server restarts or goes to sleep, and an attacker with many addresses is only slowed down, not stopped.',
     where: 'server/routes/auth.js, server/routes/public.js',
   },
   {

@@ -6,9 +6,25 @@ const pool = require('../db');
 const rateLimit = require('express-rate-limit');
 
 const router = express.Router();
-const loginLimiter = rateLimit({
+const loginAccountLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 10,
+  skipSuccessfulRequests: true,
+  keyGenerator: (req) => {
+    const email = req.body && typeof req.body.email === 'string'
+      ? req.body.email.trim().toLowerCase().slice(0, 255)
+      : '';
+    return `${req.ip}|${email}`;
+  },
+  validate: { keyGeneratorIpFallback: false },
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts for this account, please try again in 15 minutes' },
+});
+
+const loginIpLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
   skipSuccessfulRequests: true,
   standardHeaders: true,
   legacyHeaders: false,
@@ -79,7 +95,7 @@ const COOKIE_OPTIONS = {
   maxAge: 60 * 60 * 1000,
 };
 
-router.post('/login', loginLimiter, async (req, res) => {
+router.post('/login', loginIpLimiter, loginAccountLimiter, async (req, res) => {
   const { email, password } = req.body;
 
   if (typeof email !== 'string' || typeof password !== 'string') {
