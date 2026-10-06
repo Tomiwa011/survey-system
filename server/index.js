@@ -14,6 +14,8 @@ const adminRoutes = require('./routes/admin');
 const surveyRoutes = require('./routes/surveys');
 const questionRoutes = require('./routes/questions');
 const publicRoutes = require('./routes/public');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
@@ -35,6 +37,13 @@ app.use('/api/public', publicRoutes);
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
+const clientDist = path.join(__dirname, '..', 'client', 'dist');
+if (fs.existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  app.get(/^\/(?!api\/).*/, (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });

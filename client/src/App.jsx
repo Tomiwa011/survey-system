@@ -8,6 +8,7 @@ import Results from './pages/Results';
 import Admin from './pages/Admin';
 import Profile from './pages/Profile';
 import Security from './pages/Security';
+import NotFound from './pages/NotFound';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
       <Route path="/admin" element={<Admin />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/security" element={<Security />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
