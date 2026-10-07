@@ -4,3 +4,35 @@
 
 ;
 }
+
+.line-1{
+    position: relative;
+    width: 10em;
+    margin: 0;
+    border-right: 2px solid rgba(255,255,255,.75);
+    font-size: 100%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+
+}
+
+.anim-typewriter{
+  animation: typewriter 1.3s steps(13, end) 250ms both,
+             blinkTextCursor 800ms ease-in-out 1.55s infinite;
+}
+@keyframes typewriter{
+  from{width: 0;}
+  to{width: 10em;}
+}
+@keyframes blinkTextCursor{
+  0%, 100%{border-right-color: rgba(255,255,255,.85);}
+  50%{border-right-color: rgba(255,255,255,.15);}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .anim-typewriter{
+    animation: none;
+    width: 10em;
+  }
+}

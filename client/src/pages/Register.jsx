@@ -45,7 +45,7 @@ export default function Register() {
                 S
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-50">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-50 line-1 anim-typewriter">
                   Survey System
                 </p>
               </div>

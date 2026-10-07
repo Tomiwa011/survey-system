@@ -35,7 +35,7 @@ export default function Login() {
                 S
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-100">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-100 line-1 anim-typewriter">
                   Survey System
                 </p>
               </div>
