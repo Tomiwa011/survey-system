@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import App from './App';
 import "./index.css"
+import { hidePreloader } from './preloader';
+setTimeout(hidePreloader, 8000);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { api } from './api';
+import { hidePreloader } from './preloader';
 
 const AuthContext = createContext(null);
 
@@ -11,7 +12,10 @@ export function AuthProvider({ children }) {
     api('/api/auth/me')
       .then((data) => setUser(data.user))
       .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+      .finally(() => {
+  setLoading(false);
+  hidePreloader();
+});
   }, []);
 
   async function login(email, password) {
