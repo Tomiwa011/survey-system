@@ -39,7 +39,7 @@ const MEASURES = [
   },
   {
     title: 'Cross-site scripting (XSS) protection',
-    text: 'React escapes everything it displays, and the app never injects raw HTML, so a title or answer containing a script tag shows up as plain text. The server also sends Content-Security and related headers through Helmet.',
+    text: 'Login attempts are limited per account and address (and overall per address). Registration and password changes are limited, and public survey submissions are limited per address. This slows down password guessing and spam.',
     where: 'React pages, server/index.js',
   },
   {
@@ -67,13 +67,22 @@ const MEASURES = [
     text: 'Responses are anonymous: nothing links an answer to a person. The public survey endpoint returns only what is needed to answer, and drafts and closed surveys cannot be answered.',
     where: 'server/routes/public.js',
   },
+  {
+  title: 'Security logging',
+  text: 'Failed logins and denied admin requests are written to the server log, without passwords, tokens or email addresses.',
+  where: 'server/routes/auth.js, server/middleware/auth.js',
+},
 ];
 
 const LIMITS = [
   'Other devices stay signed in until their one-hour cookie expires, even after a password change.',
-  'Rate limits work per network address, so an attacker with many addresses is only slowed down, and people on a shared network share a limit.',
+  'Logging out clears the cookie but does not invalidate a copy of the token, which stays valid until it expires (one hour).',
+  'Respondents can submit a survey more than once; there is no duplicate-submission check.',
+  'Rate-limit counters are kept in the server\'s memory, so they reset when the server restarts or goes to sleep, and an attacker using many addresses is only slowed down, not stopped.',
   'There is no email verification, password reset, CAPTCHA or two-factor authentication.',
-  'There is no audit log of security events yet.',
+  'There is no dedicated CSRF token; protection relies on SameSite cookies and the cross-origin (CORS) restrictions.',
+  'Security events are written to the server log, but there is no alerting or dashboard.',
+  'Backups are limited: the host keeps a short restore history and longer-term copies are made by hand.',
 ];
 
 export default function Security() {
