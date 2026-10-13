@@ -3,7 +3,8 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { api } from '../api';
 import Navbar from '../components/Navbar';
-
+import { lazy, Suspense } from 'react';
+ const AdminCharts = lazy(() => import('../components/AdminCharts'));
 export default function Admin() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [surveys, setSurveys] = useState([]);
+ 
 
   const isAdmin = user && user.role === 'admin';
 
@@ -98,20 +100,24 @@ async function deleteSurvey(s) {
       <div className="mx-auto max-w-4xl px-4 py-6">
         <h1 className="mb-6 text-2xl font-semibold text-gray-900">Admin</h1>
 
-        {stats && (
-          <div className="mb-8 grid grid-cols-3 gap-3">
-            {[
-              ['Users', stats.users],
-              ['Surveys', stats.surveys],
-              ['Responses', stats.responses],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-lg border border-gray-200 bg-white p-4 text-center shadow-sm">
-                <p className="text-2xl font-semibold text-gray-900">{value}</p>
-                <p className="text-sm text-gray-500">{label}</p>
-              </div>
-            ))}
-          </div>
-        )}
+       {stats && (
+  <div className="mb-8 grid grid-cols-3 gap-3">
+    {[
+      ['Users', stats.users, stats.users_7d],
+      ['Surveys', stats.surveys, stats.surveys_7d],
+      ['Responses', stats.responses, stats.responses_7d],
+    ].map(([label, value, week]) => (
+      <div key={label} className="rounded-lg border border-gray-200 bg-white p-4 text-center shadow-sm">
+        <p className="text-2xl font-semibold text-gray-900">{value}</p>
+        <p className="text-sm text-gray-500">{label}</p>
+        <p className="mt-1 text-xs text-green-700">+{week} this week</p>
+      </div>
+    ))}
+  </div>
+)}
+        <Suspense fallback={<p className="mb-8 text-gray-500">Loading charts...</p>}>
+  <AdminCharts />
+</Suspense>
 
         <h2 className="mb-3 text-lg font-semibold text-gray-900">Users</h2>
         <input

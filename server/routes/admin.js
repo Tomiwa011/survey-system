@@ -15,9 +15,13 @@ router.get('/ping', (req, res) => {
 router.get('/stats', async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT (SELECT COUNT(*) FROM users)::int AS users,
-              (SELECT COUNT(*) FROM surveys)::int AS surveys,
-              (SELECT COUNT(*) FROM responses)::int AS responses`
+      `SELECT
+         (SELECT COUNT(*) FROM users)::int AS users,
+         (SELECT COUNT(*) FROM surveys)::int AS surveys,
+         (SELECT COUNT(*) FROM responses)::int AS responses,
+         (SELECT COUNT(*) FROM users WHERE created_at >= NOW() - INTERVAL '7 days')::int AS users_7d,
+         (SELECT COUNT(*) FROM surveys WHERE created_at >= NOW() - INTERVAL '7 days')::int AS surveys_7d,
+         (SELECT COUNT(*) FROM responses WHERE submitted_at >= NOW() - INTERVAL '7 days')::int AS responses_7d`
     );
     res.json({ stats: result.rows[0] });
   } catch (err) {
@@ -124,6 +128,49 @@ router.delete('/surveys/:id', async (req, res) => {
       return res.status(404).json({ error: 'Survey not found' });
     }
     res.status(204).end();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+router.get('/charts', async (req, res) => {
+  try {
+    const perDay = await pool.query(
+      `SELECT to_char(d, 'YYYY-MM-DD') AS day, COUNT(r.id)::int AS count
+       FROM generate_series(
+              date_trunc('day', NOW()) - INTERVAL '29 days',
+              date_trunc('day', NOW()),
+              INTERVAL '1 day'
+            ) AS d
+       LEFT JOIN responses r
+         ON r.submitted_at >= d AND r.submitted_at < d + INTERVAL '1 day'
+       GROUP BY d
+       ORDER BY d`
+    );
+
+    const statuses = await pool.query(
+      'SELECT status, COUNT(*)::int AS count FROM surveys GROUP BY status'
+    );
+    const statusCounts = ['draft', 'open', 'closed'].map((s) => {
+      const found = statuses.rows.find((r) => r.status === s);
+      return { status: s, count: found ? found.count : 0 };
+    });
+
+    const top = await pool.query(
+      `SELECT s.title, COUNT(r.id)::int AS responses
+       FROM surveys s
+       LEFT JOIN responses r ON r.survey_id = s.id
+       GROUP BY s.id
+       ORDER BY responses DESC, s.created_at DESC
+       LIMIT 5`
+    );
+
+    res.json({
+      responsesPerDay: perDay.rows,
+      statusCounts,
+      topSurveys: top.rows,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Something went wrong' });
