@@ -3,32 +3,56 @@
   <head>
     <style>
   #preloader {
+    --pl-bg: #000000;
+    --pl-spoke: #9ca3af;
     position: fixed;
     inset: 0;
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f9fafb;
+    background: var(--pl-bg);
     transition: opacity 0.3s ease;
   }
   #preloader.hidden {
     opacity: 0;
     pointer-events: none;
   }
-  #preloader .spinner {
+  .ios-spinner {
+    position: relative;
     width: 44px;
     height: 44px;
-    border: 4px solid #d1d5db;
-    border-top-color: #2563eb;
-    border-radius: 50%;
-    animation: preloader-spin 0.8s linear infinite;
   }
-  @keyframes preloader-spin {
-    to { transform: rotate(360deg); }
+  .ios-spinner i {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 2px);
+    width: 4px;
+    height: 11px;
+    border-radius: 2px;
+    background: var(--pl-spoke);
+    opacity: 0.15;
+    transform-origin: 2px 22px;
+    animation: ios-fade 1s linear infinite;
+  }
+  .ios-spinner i:nth-child(1)  { transform: rotate(0deg);   animation-delay: -1s; }
+  .ios-spinner i:nth-child(2)  { transform: rotate(30deg);  animation-delay: -0.9167s; }
+  .ios-spinner i:nth-child(3)  { transform: rotate(60deg);  animation-delay: -0.8333s; }
+  .ios-spinner i:nth-child(4)  { transform: rotate(90deg);  animation-delay: -0.75s; }
+  .ios-spinner i:nth-child(5)  { transform: rotate(120deg); animation-delay: -0.6667s; }
+  .ios-spinner i:nth-child(6)  { transform: rotate(150deg); animation-delay: -0.5833s; }
+  .ios-spinner i:nth-child(7)  { transform: rotate(180deg); animation-delay: -0.5s; }
+  .ios-spinner i:nth-child(8)  { transform: rotate(210deg); animation-delay: -0.4167s; }
+  .ios-spinner i:nth-child(9)  { transform: rotate(240deg); animation-delay: -0.3333s; }
+  .ios-spinner i:nth-child(10) { transform: rotate(270deg); animation-delay: -0.25s; }
+  .ios-spinner i:nth-child(11) { transform: rotate(300deg); animation-delay: -0.1667s; }
+  .ios-spinner i:nth-child(12) { transform: rotate(330deg); animation-delay: -0.0833s; }
+  @keyframes ios-fade {
+    from { opacity: 1; }
+    to   { opacity: 0.15; }
   }
   @media (prefers-reduced-motion: reduce) {
-    #preloader .spinner { animation-duration: 2.4s; }
+    .ios-spinner i { animation: none; opacity: 0.5; }
   }
 </style>
     <meta charset="UTF-8" />
@@ -44,9 +68,10 @@
   </head>
   
   <body>
-    
-<div id="preloader" role="status" aria-label="Loading">
-  <div class="spinner"></div>
+ <div id="preloader" role="status" aria-label="Loading">
+  <div class="ios-spinner">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
 </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

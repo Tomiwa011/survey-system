@@ -37,3 +37,27 @@
     width: 10em;
   }
 }
+.spinner-ios {
+  position: relative;
+  display: inline-block;
+  color: #6b7280;
+}
+.spinner-ios i {
+  position: absolute;
+  top: 0;
+  left: 45.5%;
+  width: 9%;
+  height: 25%;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.15;
+  transform-origin: 50% 200%;
+  animation: spinner-fade 1s linear infinite;
+}
+@keyframes spinner-fade {
+  from { opacity: 1; }
+  to { opacity: 0.15; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner-ios i { animation: none; opacity: 0.5; }
+}

@@ -4,6 +4,11 @@ import { useAuth } from '../AuthContext';
 import { api } from '../api';
 import Navbar from '../components/Navbar';
 import { lazy, Suspense } from 'react';
+
+import { PageLoading } from '../components/Spinner';
+
+
+
  const AdminCharts = lazy(() => import('../components/AdminCharts'));
 export default function Admin() {
   const { user, loading: authLoading } = useAuth();
@@ -14,6 +19,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [surveys, setSurveys] = useState([]);
+
  
 
   const isAdmin = user && user.role === 'admin';
@@ -90,7 +96,7 @@ async function deleteSurvey(s) {
     }
   }
 
-  if (authLoading) return <p>Loading...</p>;
+  if (authLoading) return <PageLoading />;
   if (!user) return <Navigate to="/login" replace />;
   if (user.role !== 'admin') return <Navigate to="/dashboard" replace />;
 
@@ -115,7 +121,7 @@ async function deleteSurvey(s) {
     ))}
   </div>
 )}
-        <Suspense fallback={<p className="mb-8 text-gray-500">Loading charts...</p>}>
+        <Suspense fallback={<PageLoading text="Loading charts..." />}>
   <AdminCharts />
 </Suspense>
 
@@ -134,7 +140,7 @@ async function deleteSurvey(s) {
             {error}
           </p>
         )}
-        {loading && <p className="text-gray-500">Loading users...</p>}
+        {loading && <PageLoading text="Loading users..." />}
         {!loading && users.length === 0 && <p className="text-gray-500">No users found.</p>}
 
         {users.length > 0 && (

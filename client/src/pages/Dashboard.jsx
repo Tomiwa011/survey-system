@@ -4,6 +4,8 @@ import { useAuth } from "../AuthContext";
 import { api } from "../api";
 import Navbar from "../components/Navbar";
 import SurveyCard from "../components/SurveyCard";
+import { PageLoading } from '../components/Spinner';
+
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -75,7 +77,7 @@ export default function Dashboard() {
       else setActionError(err.message);
     }
   }
-  if (authLoading) return <p>Loading...</p>;
+  if (authLoading) return <PageLoading />;
   if (!user) return <Navigate to="/login" replace />;
 
   const visible = surveys.filter(
@@ -184,7 +186,7 @@ export default function Dashboard() {
               {actionError}
             </p>
           )}
-          {loading && <p className="text-gray-500">Loading surveys...</p>}
+          {loading && <PageLoading text="Loading Surveys..." />}
           {error && (
             <p
               role="alert"

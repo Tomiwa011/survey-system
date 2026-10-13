@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { api } from '../api';
-
+  import { PageLoading } from '../components/Spinner';
 export default function PublicSurvey() {
   const { id } = useParams();
   const [survey, setSurvey] = useState(null);
@@ -12,6 +12,7 @@ export default function PublicSurvey() {
   const [submitError, setSubmitError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+
 
   useEffect(() => {
     api(`/api/public/surveys/${id}`)
@@ -78,7 +79,7 @@ export default function PublicSurvey() {
     }
   }
 
-  if (loading) return <p className="p-6 text-gray-500">Loading...</p>;
+  if (loading) return <PageLoading />;
 
   if (loadError) {
     return (

@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { api } from '../api';
 import Navbar from '../components/Navbar';
-
+import { PageLoading } from '../components/Spinner';
 const TYPE_LABEL = {
   short_text: 'Short text',
   single_choice: 'Single choice',
@@ -124,7 +124,7 @@ async function handleDeleteQuestion(q) {
     else setActionError(err.message);
   }
 }
-  if (authLoading) return <p>Loading...</p>;
+  if (authLoading) return <PageLoading />;
   if (!user) return <Navigate to="/login" replace />;
 
   return (
@@ -135,7 +135,7 @@ async function handleDeleteQuestion(q) {
           ← Back to dashboard
         </Link>
 
-        {loading && <p className="mt-4 text-gray-500">Loading...</p>}
+        {loading && <PageLoading text="Loading Survey..." />}
         {error && (
           <p role="alert" className="mt-4 rounded bg-red-50 px-3 py-2 text-red-700">
             {error}

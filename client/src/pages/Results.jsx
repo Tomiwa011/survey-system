@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { api } from '../api';
 import Navbar from '../components/Navbar';
+import { PageLoading } from '../components/Spinner';
 
 function Bar({ label, count, total }) {
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
@@ -40,7 +41,7 @@ export default function Results() {
       .finally(() => setLoading(false));
   }, [id, user, navigate]);
 
-  if (authLoading) return <p>Loading...</p>;
+  if (authLoading) return <PageLoading />;
   if (!user) return <Navigate to="/login" replace />;
 
   return (
@@ -51,7 +52,7 @@ export default function Results() {
           ← Back to dashboard
         </Link>
 
-        {loading && <p className="mt-4 text-gray-500">Loading...</p>}
+        {loading && <PageLoading text="Loading Results..." />}
         {error && (
           <p role="alert" className="mt-4 rounded bg-red-50 px-3 py-2 text-red-700">
             {error}
