@@ -62,7 +62,7 @@ export default function Navbar() {
           {!loading && user && (
             <div className="site-nav__account">
               {user.role === 'admin' && navLink('/admin', 'Admin')}
-              {navLink('/profile', 'Profile')}
+              {navLink('/profile', 'Edit Profile')}
               <span className="site-nav__user">{user.name}</span>
               <button type="button" onClick={logout} className="site-nav__logout">
                 Log out
