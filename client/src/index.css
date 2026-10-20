@@ -815,7 +815,7 @@
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 720px) {
   .home-container {
     width: min(100% - 36px, 480px);
   }
@@ -2497,6 +2497,126 @@
 
   .auth-card > main {
     padding: 22px 16px;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-page {
+    min-height: calc(100vh - 66px);
+    overflow-x: clip;
+  }
+
+  .app-page__content,
+  .auth-card,
+  .profile-page__content,
+  .admin-page__content,
+  .public-survey-page__content,
+  .survey-builder-page__content,
+  .results-page__content {
+    min-width: 0;
+  }
+
+  .admin-chart-panel,
+  .app-panel {
+    min-width: 0;
+  }
+
+  .admin-chart-panel .recharts-responsive-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-page :is(input:not([type="checkbox"]):not([type="radio"]), textarea, select),
+  .auth-page input {
+    min-width: 0;
+    font-size: 16px;
+  }
+
+  .app-page button,
+  .auth-page button {
+    min-height: 42px;
+  }
+
+  .app-page :is(h1, h2, h3, p, label, li, span),
+  .auth-page :is(h1, h2, p, label) {
+    overflow-wrap: anywhere;
+  }
+
+  .dashboard-page__content,
+  .survey-builder-page__content,
+  .results-page__content,
+  .profile-page__content,
+  .admin-page__content,
+  .public-survey-page__content {
+    width: 100%;
+  }
+
+  .dashboard-page__new-survey form button[type="submit"],
+  .survey-question-form button[type="submit"],
+  .profile-form button[type="submit"] {
+    min-height: 44px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .survey-question-form > div.flex {
+    min-width: 0;
+  }
+
+  .results-question-card .flex.justify-between {
+    align-items: flex-start;
+  }
+
+  .results-question-card .flex.justify-between > :first-child {
+    min-width: 0;
+  }
+
+  .admin-table-wrap {
+    max-width: 100%;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .auth-card {
+    max-width: 480px;
+  }
+
+  .auth-card > main {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .home-hero__bottom-inner {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    text-align: center;
+  }
+
+  .home-art {
+    width: calc(100% + 12px);
+    margin-right: -6px;
+    margin-left: -6px;
+  }
+
+  .home-insight-card {
+    right: 0;
+  }
+
+  .security-limitations__heading {
+    gap: 10px;
+  }
+
+  .security-limitations__heading .security-eyebrow {
+    letter-spacing: .1em;
+  }
+
+  .auth-page > a:first-child {
+    left: 12px;
+    top: 12px;
   }
 }
 
