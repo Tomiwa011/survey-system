@@ -9,10 +9,12 @@ import Admin from './pages/Admin';
 import Profile from './pages/Profile';
 import Security from './pages/Security';
 import NotFound from './pages/NotFound';
+import Home from './pages/Home';
 
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<Home />} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

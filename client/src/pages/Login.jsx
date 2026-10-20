@@ -26,51 +26,51 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-8 sm:px-6 lg:px-8">
-      <div className="flex w-full max-w-5xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_25px_80px_rgba(15,23,42,0.12)]">
-        <aside className="hidden w-1/2 bg-blue-600 p-8 text-white lg:flex lg:flex-col lg:justify-between">
+    <div className="auth-page relative flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+      <Link
+        to="/"
+        className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/90 px-4 py-2 text-sm font-medium text-emerald-800 shadow-sm transition hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 sm:left-6 sm:top-6"
+      >
+        <span aria-hidden="true">←</span>
+        Back to home
+      </Link>
+      <div className="auth-card flex w-full max-w-5xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_25px_80px_rgba(15,23,42,0.12)]">
+        <aside className="auth-story hidden w-1/2 p-8 text-white lg:flex lg:flex-col lg:justify-between">
           <div>
             <div className="mb-8 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-lg font-bold shadow-inner ring-1 ring-white/20">
                 S
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-100 line-1 anim-typewriter">
-                  Survey System
+                <p className="auth-story__brand text-xs font-semibold uppercase tracking-[0.22em] line-1 anim-typewriter">
+                    SurveyApp
                 </p>
               </div>
             </div>
 
             <div className="space-y-5">
-              <h1 className="text-4xl font-bold leading-tight">
-                Build better feedback loops.
+              <h1 className="auth-story__title text-4xl font-bold leading-tight">
+                Welcome back to better questions.
               </h1>
-              <p className="max-w-sm text-base text-blue-50/90">
-                Create, manage, and analyze surveys in one streamlined
-                workspace.
+              <p className="auth-story__description max-w-sm text-base">
+                Pick up where you left off, create a survey, and turn responses into useful insights.
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
-              <p className="text-2xl font-bold">2.4k</p>
-              <p className="mt-1 text-sm text-blue-100">Responses</p>
-            </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
-              <p className="text-2xl font-bold">180</p>
-              <p className="mt-1 text-sm text-blue-100">Surveys</p>
-            </div>
+          <div className="auth-story__steps">
+            <span>Ask thoughtful questions</span>
+            <span>Learn from every answer</span>
           </div>
         </aside>
 
         <main className="w-full p-6 sm:p-8 lg:w-1/2 lg:p-10">
           <div className="mx-auto max-w-md">
             <div className="mb-8 text-center lg:text-left">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-xl font-bold text-blue-600 ring-1 ring-blue-100 lg:mx-0">
+              <div className="auth-form__mark mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-bold lg:mx-0">
                 S
               </div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-600">
+              <p className="auth-form__eyebrow text-xs font-semibold uppercase tracking-[0.24em]">
                 Welcome back
               </p>
               <h2 className="mt-3 text-3xl font-bold text-slate-900">Log in</h2>
@@ -96,7 +96,7 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   required
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                  className="auth-input w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none transition"
                 />
               </div>
 
@@ -111,7 +111,7 @@ export default function Login() {
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="current-password"
                     required
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-11 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                    className="auth-input w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-11 text-slate-900 outline-none transition"
                   />
                   <button
                     type="button"
@@ -129,7 +129,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-400"
+                className="auth-submit w-full rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {submitting ? "Logging in..." : "Log in"}
               </button>
@@ -139,7 +139,7 @@ export default function Login() {
               No account?{" "}
               <Link
                 to="/register"
-                className="font-semibold text-blue-600 hover:text-blue-500"
+                className="auth-inline-link font-semibold"
               >
                 Register
               </Link>

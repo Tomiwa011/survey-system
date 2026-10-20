@@ -89,16 +89,25 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-white px-4 py-6 text-slate-900">
-        <div className="mx-auto max-w-2xl">
-          <h1 className="mb-6 text-2xl font-semibold text-gray-900">
-            Welcome, {user.name}
-          </h1>
+      <main className="app-page dashboard-page">
+        <div className="app-page__content dashboard-page__content">
+          <header className="app-page__heading">
+            <p className="app-page__eyebrow">Your workspace</p>
+            <h1>Welcome, {user.name}</h1>
+            <p>Make a survey, share it with your audience, and explore what you learn.</p>
+          </header>
 
-          <div className="mb-8 rounded-xl border border-slate-200 bg-white p-4 shadow-[0_8px_30px_rgba(15,23,42,0.08)]">
-            <h2 className="mb-3 text-lg font-semibold text-gray-900">
-              New survey
-            </h2>
+          <section
+            id="new-survey"
+            className="app-panel dashboard-page__new-survey"
+          >
+            <div className="app-panel__heading">
+              <span className="app-panel__icon" aria-hidden="true">✳</span>
+              <div>
+                <h2>Start a new survey</h2>
+                <p>Keep it simple. You can add questions next.</p>
+              </div>
+            </div>
             <form onSubmit={handleCreate} className="space-y-4">
               {createError && (
                 <p
@@ -152,11 +161,15 @@ export default function Dashboard() {
                 {creating ? "Creating..." : "Create survey"}
               </button>
             </form>
-          </div>
+          </section>
 
-          <h2 className="mb-3 text-lg font-semibold text-gray-900">
-            My surveys
-          </h2>
+          <div className="dashboard-page__list-heading">
+            <div>
+              <p className="app-page__eyebrow">Your collection</p>
+              <h2>My surveys</h2>
+            </div>
+            <span>{surveys.length} {surveys.length === 1 ? 'survey' : 'surveys'}</span>
+          </div>
           <div className="mb-4 flex flex-col gap-2 sm:flex-row">
             <input
               type="search"
@@ -214,7 +227,7 @@ export default function Dashboard() {
             />
           ))}
         </div>
-      </div>
+      </main>
     </>
   );
 }

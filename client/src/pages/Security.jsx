@@ -87,37 +87,80 @@ const LIMITS = [
 
 export default function Security() {
   return (
-    <>
+    <div className="security-page">
       <Navbar />
-      <div className="mx-auto max-w-3xl px-4 py-8">
-        <h1 className="text-2xl font-semibold text-gray-900">Security</h1>
-        <p className="mt-2 text-gray-600">
-          How this application protects its users and their data, and where each measure is implemented.
-        </p>
+      <main>
+        <header className="security-hero">
+          <div className="security-container security-hero__inner">
+            <div className="security-hero__copy">
+              <p className="security-eyebrow"><span /> Clear, practical, and transparent</p>
+              <h1>Security is part of every answer.</h1>
+              <p>
+                See how SurveyApp protects accounts, surveys, and responses — and what limitations we’re still open about.
+              </p>
+              <a className="security-hero__link" href="#security-measures">
+                Explore our safeguards <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+            <div className="security-hero__visual" aria-hidden="true">
+              <div className="security-hero__halo" />
+              <div className="security-shield">
+                <svg viewBox="0 0 64 72" fill="none">
+                  <path d="M32 4 56 13v18c0 16-10 28-24 37C18 59 8 47 8 31V13L32 4Z" />
+                  <path d="m22 35 7 7 14-15" />
+                </svg>
+              </div>
+              <div className="security-hero__note">
+                <span className="security-hero__note-dot" />
+                <span><b>Built into the process</b><small>Protection at every step</small></span>
+              </div>
+              <span className="security-hero__spark security-hero__spark--one">✦</span>
+              <span className="security-hero__spark security-hero__spark--two">✳</span>
+            </div>
+          </div>
+        </header>
 
-        <div className="mt-6 space-y-3">
-          {MEASURES.map((m) => (
-            <section key={m.title} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-              <h2 className="font-semibold text-gray-900">{m.title}</h2>
-              <p className="mt-1 text-gray-700">{m.text}</p>
-              <p className="mt-2 text-xs text-gray-500">Implemented in: {m.where}</p>
-            </section>
-          ))}
+        <div className="security-container security-content">
+          <section id="security-measures" className="security-measures">
+            <div className="security-section-heading">
+              <p className="security-eyebrow">How we protect your data</p>
+              <h2>Safeguards, explained.</h2>
+              <p>Each measure includes where it’s implemented, so you can see how the protections work.</p>
+            </div>
+
+            <div className="security-measure-grid">
+              {MEASURES.map((m, index) => (
+                <section key={m.title} className="security-measure">
+                  <span className="security-measure__index">{String(index + 1).padStart(2, '0')}</span>
+                  <h3>{m.title}</h3>
+                  <p>{m.text}</p>
+                  <p className="security-measure__source">Implemented in: <code>{m.where}</code></p>
+                </section>
+              ))}
+            </div>
+          </section>
+
+          <section className="security-limitations">
+            <div className="security-limitations__heading">
+              <span className="security-limitations__mark" aria-hidden="true">i</span>
+              <div>
+                <p className="security-eyebrow">Honest by design</p>
+                <h2>Known limitations</h2>
+                <p>Security is an ongoing effort. Here’s what the app does not currently cover.</p>
+              </div>
+            </div>
+            <ul>
+              {LIMITS.map((l) => (
+                <li key={l}>{l}</li>
+              ))}
+            </ul>
+          </section>
+
+          <div className="security-back">
+            <Link to="/">← Back to SurveyApp</Link>
+          </div>
         </div>
-
-        <h2 className="mt-10 text-lg font-semibold text-gray-900">Known limitations</h2>
-        <ul className="mt-2 list-disc space-y-1 pl-6 text-gray-700">
-          {LIMITS.map((l) => (
-            <li key={l}>{l}</li>
-          ))}
-        </ul>
-
-        <p className="mt-8 text-sm">
-          <Link to="/dashboard" className="text-blue-700 hover:underline">
-            ← Back to the app
-          </Link>
-        </p>
-      </div>
-    </>
+      </main>
+    </div>
   );
 }

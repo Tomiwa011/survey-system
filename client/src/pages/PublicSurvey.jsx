@@ -83,31 +83,40 @@ export default function PublicSurvey() {
 
   if (loadError) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-10 text-center">
+      <main className="app-page public-survey-page">
+      <div className="app-page__content public-survey-page__content text-center">
         <p className="text-lg text-gray-800">{loadError}</p>
       </div>
+      </main>
     );
   }
 
   if (done) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-10 text-center">
+      <main className="app-page public-survey-page">
+      <div className="app-page__content public-survey-page__content app-panel text-center">
+        <span className="public-survey-success__icon" aria-hidden="true">✓</span>
         <h1 className="text-2xl font-semibold text-gray-900">Thank you!</h1>
         <p className="mt-2 text-gray-600">Your response has been recorded.</p>
       </div>
+      </main>
     );
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="text-2xl font-semibold text-gray-900">{survey.title}</h1>
-      {survey.description && <p className="mt-1 text-gray-600">{survey.description}</p>}
+    <main className="app-page public-survey-page">
+    <div className="app-page__content public-survey-page__content">
+      <header className="app-page__heading">
+        <p className="app-page__eyebrow">Your voice matters</p>
+        <h1>{survey.title}</h1>
+        {survey.description && <p>{survey.description}</p>}
+      </header>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         {questions.map((q, index) => (
           <fieldset
             key={q.id}
-            className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+            className="app-panel public-survey-question"
           >
             <legend className="px-1 font-medium text-gray-900">
               {index + 1}. {q.text}
@@ -180,11 +189,12 @@ export default function PublicSurvey() {
         <button
           type="submit"
           disabled={submitting}
-          className="rounded bg-blue-600 px-5 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="app-primary-button rounded px-5 py-2 font-medium text-white disabled:opacity-50"
         >
           {submitting ? 'Submitting...' : 'Submit'}
         </button>
       </form>
     </div>
+    </main>
   );
 }

@@ -130,8 +130,9 @@ async function handleDeleteQuestion(q) {
   return (
     <>
       <Navbar />
-      <div className="mx-auto max-w-2xl px-4 py-6">
-        <Link to="/dashboard" className="text-sm text-blue-700 hover:underline">
+      <main className="app-page survey-builder-page">
+        <div className="app-page__content survey-builder-page__content">
+        <Link to="/dashboard" className="app-back-link">
           ← Back to dashboard
         </Link>
 
@@ -144,10 +145,16 @@ async function handleDeleteQuestion(q) {
 
         {survey && (
           <>
-            <h1 className="mt-4 text-2xl font-semibold text-gray-900">{survey.title}</h1>
-            {survey.description && <p className="mt-1 text-gray-600">{survey.description}</p>}
+            <header className="app-page__heading survey-builder-page__heading">
+              <p className="app-page__eyebrow">Survey studio</p>
+              <h1>{survey.title}</h1>
+              {survey.description && <p>{survey.description}</p>}
+            </header>
 
-            <h2 className="mb-3 mt-8 text-lg font-semibold text-gray-900">Questions</h2>
+            <div className="survey-builder-page__section-heading">
+              <h2>Questions</h2>
+              <span>{questions.length} {questions.length === 1 ? 'question' : 'questions'}</span>
+            </div>
             {questions.length === 0 && (
               <p className="text-gray-500">No questions yet.</p>
             )}
@@ -159,7 +166,7 @@ async function handleDeleteQuestion(q) {
 )}
 
 {questions.map((q) => (
-  <div key={q.id} className="mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+  <div key={q.id} className="app-panel survey-question-card">
     {editingId === q.id ? (
       <div className="space-y-3">
         <input
@@ -231,7 +238,7 @@ async function handleDeleteQuestion(q) {
 ))}
             <form
   onSubmit={handleAddQuestion}
-  className="mt-6 space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+  className="app-panel survey-question-form mt-6 space-y-4"
 >
   <h3 className="text-lg font-semibold text-gray-900">Add a question</h3>
 
@@ -254,7 +261,7 @@ async function handleDeleteQuestion(q) {
       required
       className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
     />
-  </div>
+    </div>
 
   <div>
     <label htmlFor="qtype" className="mb-1 block text-sm font-medium text-gray-700">
@@ -271,7 +278,7 @@ async function handleDeleteQuestion(q) {
       <option value="multiple_choice">Multiple choice</option>
       <option value="rating">Rating (1 to 5)</option>
     </select>
-  </div>
+    </div>
 
   {isChoice && (
     <div className="space-y-2">
@@ -329,6 +336,7 @@ async function handleDeleteQuestion(q) {
           </>
         )}
       </div>
+      </main>
     </>
   );
 }

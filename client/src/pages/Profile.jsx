@@ -83,11 +83,16 @@ function ProfileForms({ user }) {
   }
 
   return (
-    <div className="mx-auto max-w-md space-y-8 px-4 py-6">
-      <h1 className="text-2xl font-semibold text-gray-900">Your profile</h1>
+    <main className="app-page profile-page">
+    <div className="app-page__content profile-page__content space-y-8">
+      <header className="app-page__heading">
+        <p className="app-page__eyebrow">Account settings</p>
+        <h1>Your profile</h1>
+        <p>Update your account details and keep your sign-in secure.</p>
+      </header>
 
-      <form onSubmit={handleDetails} className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-900">Details</h2>
+      <form onSubmit={handleDetails} className="app-panel profile-form space-y-4">
+        <h2 className="text-lg font-semibold text-gray-900">Personal details</h2>
         {detailsError && <p role="alert" className="rounded bg-red-50 px-3 py-2 text-sm text-red-700">{detailsError}</p>}
         {detailsMsg && <p className="rounded bg-green-50 px-3 py-2 text-sm text-green-700">{detailsMsg}</p>}
 
@@ -104,7 +109,7 @@ function ProfileForms({ user }) {
         </button>
       </form>
 
-      <form onSubmit={handlePassword} className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <form onSubmit={handlePassword} className="app-panel profile-form space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">Change password</h2>
         {pwError && <p role="alert" className="rounded bg-red-50 px-3 py-2 text-sm text-red-700">{pwError}</p>}
         {pwMsg && <p className="rounded bg-green-50 px-3 py-2 text-sm text-green-700">{pwMsg}</p>}
@@ -126,5 +131,6 @@ function ProfileForms({ user }) {
         </button>
       </form>
     </div>
+    </main>
   );
 }

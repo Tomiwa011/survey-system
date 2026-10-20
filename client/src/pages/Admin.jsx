@@ -103,17 +103,22 @@ async function deleteSurvey(s) {
   return (
     <>
       <Navbar />
-      <div className="mx-auto max-w-4xl px-4 py-6">
-        <h1 className="mb-6 text-2xl font-semibold text-gray-900">Admin</h1>
+      <main className="app-page admin-page">
+      <div className="app-page__content admin-page__content">
+        <header className="app-page__heading">
+          <p className="app-page__eyebrow">SurveyApp overview</p>
+          <h1>Admin workspace</h1>
+          <p>Monitor activity and manage accounts and surveys.</p>
+        </header>
 
        {stats && (
-  <div className="mb-8 grid grid-cols-3 gap-3">
+  <div className="admin-stats mb-8 grid grid-cols-3 gap-3">
     {[
       ['Users', stats.users, stats.users_7d],
       ['Surveys', stats.surveys, stats.surveys_7d],
       ['Responses', stats.responses, stats.responses_7d],
     ].map(([label, value, week]) => (
-      <div key={label} className="rounded-lg border border-gray-200 bg-white p-4 text-center shadow-sm">
+      <div key={label} className="admin-stat-card app-panel p-4 text-center">
         <p className="text-2xl font-semibold text-gray-900">{value}</p>
         <p className="text-sm text-gray-500">{label}</p>
         <p className="mt-1 text-xs text-green-700">+{week} this week</p>
@@ -125,7 +130,10 @@ async function deleteSurvey(s) {
   <AdminCharts />
 </Suspense>
 
-        <h2 className="mb-3 text-lg font-semibold text-gray-900">Users</h2>
+        <div className="admin-section-heading">
+          <p className="app-page__eyebrow">People</p>
+          <h2>Users</h2>
+        </div>
         <input
           type="search"
           value={search}
@@ -144,7 +152,7 @@ async function deleteSurvey(s) {
         {!loading && users.length === 0 && <p className="text-gray-500">No users found.</p>}
 
         {users.length > 0 && (
-          <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className="admin-table-wrap overflow-x-auto app-panel">
             <table className="w-full text-left text-sm">
               <thead className="bg-gray-50 text-gray-600">
                 <tr>
@@ -189,11 +197,14 @@ async function deleteSurvey(s) {
           </div>
         )}
 
-        <h2 className="mb-3 mt-10 text-lg font-semibold text-gray-900">All surveys</h2>
+        <div className="admin-section-heading admin-section-heading--spaced">
+          <p className="app-page__eyebrow">Survey activity</p>
+          <h2>All surveys</h2>
+        </div>
 {surveys.length === 0 ? (
   <p className="text-gray-500">No surveys yet.</p>
 ) : (
-  <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+  <div className="admin-table-wrap overflow-x-auto app-panel">
     <table className="w-full text-left text-sm">
       <thead className="bg-gray-50 text-gray-600">
         <tr>
@@ -236,6 +247,7 @@ async function deleteSurvey(s) {
   </div>
 )}
       </div>
+      </main>
     </>
   );
 }

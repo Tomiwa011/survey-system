@@ -47,8 +47,9 @@ export default function Results() {
   return (
     <>
       <Navbar />
-      <div className="mx-auto max-w-2xl px-4 py-6">
-        <Link to="/dashboard" className="text-sm text-blue-700 hover:underline">
+      <main className="app-page results-page">
+        <div className="app-page__content results-page__content">
+        <Link to="/dashboard" className="app-back-link">
           ← Back to dashboard
         </Link>
 
@@ -61,10 +62,13 @@ export default function Results() {
 
         {data && (
           <>
-            <h1 className="mt-4 text-2xl font-semibold text-gray-900">{data.survey.title}</h1>
-            <p className="mt-1 text-gray-600">
-              {data.totalResponses} {data.totalResponses === 1 ? 'response' : 'responses'}
-            </p>
+            <header className="app-page__heading results-page__heading">
+              <p className="app-page__eyebrow">Survey insights</p>
+              <h1>{data.survey.title}</h1>
+              <p>
+                {data.totalResponses} {data.totalResponses === 1 ? 'response' : 'responses'} collected
+              </p>
+            </header>
 
             {data.totalResponses === 0 && (
               <p className="mt-6 text-gray-500">No responses yet. Share the link to get started.</p>
@@ -74,7 +78,7 @@ export default function Results() {
               data.questions.map((q, index) => (
                 <div
                   key={q.id}
-                  className="mt-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+                  className="app-panel results-question-card mt-4"
                 >
                   <h2 className="font-medium text-gray-900">
                     {index + 1}. {q.text}
@@ -125,7 +129,8 @@ export default function Results() {
               ))}
           </>
         )}
-      </div>
+        </div>
+      </main>
     </>
   );
 }

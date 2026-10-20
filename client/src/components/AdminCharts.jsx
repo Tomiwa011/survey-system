@@ -16,11 +16,11 @@ import {
 } from 'recharts';
 import { api } from '../api';
 
-const STATUS_COLORS = { draft: '#9ca3af', open: '#16a34a', closed: '#1f2937' };
+const STATUS_COLORS = { draft: '#9ca3af', open: '#6d9e7e', closed: '#23493d' };
 
 function Panel({ title, summary, children }) {
   return (
-    <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <section className="app-panel admin-chart-panel">
       <h3 className="font-semibold text-gray-900">{title}</h3>
       <p className="mb-3 text-sm text-gray-500">{summary}</p>
       {children}
@@ -66,7 +66,7 @@ export default function AdminCharts() {
             <XAxis dataKey="day" tickFormatter={shortDate} minTickGap={24} tick={{ fontSize: 12 }} />
             <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
             <Tooltip labelFormatter={shortDate} formatter={(v) => [v, 'Responses']} />
-            <Line type="monotone" dataKey="count" stroke="#2563eb" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="count" stroke="#326d5d" strokeWidth={2} dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </Panel>
@@ -118,7 +118,7 @@ export default function AdminCharts() {
                   tickFormatter={(t) => (t.length > 16 ? `${t.slice(0, 15)}…` : t)}
                 />
                 <Tooltip formatter={(v) => [v, 'Responses']} />
-                <Bar dataKey="responses" fill="#2563eb" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="responses" fill="#6d9e7e" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}
