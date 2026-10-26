@@ -29,7 +29,7 @@ export default function Login() {
     <div className="auth-page relative flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
       <Link
         to="/"
-        className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/90 px-4 py-2 text-sm font-medium text-emerald-800 shadow-sm transition hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 sm:left-6 sm:top-6"
+        className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded border border-emerald-200 bg-white/90 px-4 py-2 text-sm font-medium text-emerald-800 shadow-sm transition hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 sm:left-6 sm:top-6"
       >
         <span aria-hidden="true">←</span>
         Back to home
